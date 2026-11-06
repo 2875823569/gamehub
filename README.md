@@ -6,12 +6,13 @@
 
 ## 当前部署
 
-预览地址：https://dice-night-gamehub.dented-sombrero.workers.dev
+访问地址：https://dice-night-gamehub.dented-sombrero.workers.dev
 
-2026-11-06 已通过 Wrangler 临时预览账户部署，包含真实 Workers + SQLite Durable Objects 房间服务。
-**这是临时预览，需要在 Cloudflare 提示的 60 分钟认领窗口内完成账户认领，才能转为自己的长期部署。认领链接仅在交付聊天中提供，不进入代码或源码压缩包。**
+2026-11-06 已完成 Cloudflare 邮箱验证与账户认领。控制台显示 **Your site is live**；Worker 及其资源已由用户账户管理，不再处于待认领状态。网站包含真实 Workers + SQLite Durable Objects 房间服务，访问地址保持不变。
 
-如果预览已过期，源码不受影响；用自己的 Cloudflare 账户登录后执行 `npm run deploy` 即可重新部署，最终域名以命令输出为准。
+管理入口：https://dash.cloudflare.com/d7ced61ae54d0d05ba3364478d738b2a/workers/services/view/dice-night-gamehub/production
+
+`wrangler.jsonc` 已固定到认领后的账户 ID，防止后续维护时部署到其他账户。账户 ID 是资源标识，不是访问令牌。
 大陆网络的可用性取决于具体地区和运营商。当前未验证移动、联通、电信的独立直连体验。
 
 ## 目录
@@ -88,7 +89,7 @@ npm run test:capacity
 
 测试涵盖：服务端私有骰子、身份校验、非法叫点、非当前玩家操作、房主权限、开骰结算、重玩、刷新重连、后来玩家等待下一局、主动离开、60 秒掉线判负、六人容量、房主移交、空房清理。
 
-## 部署自己的账户
+## 后续更新部署
 
 ```powershell
 npm run cf:login
@@ -100,7 +101,7 @@ npm run deploy
 项目使用 SQLite Durable Objects，适配 Workers 免费方案；请求、计算时长和存储受免费额度约束。没有为项目购买域名或升级付费方案。
 可在 Cloudflare 控制台给 Worker 添加自己的域名，但这不保证大陆网络连通性。
 
-若已经认领临时预览，请在自己的账户里确认 Worker 所在账户与域名，再用正式账户登录维护。
+浏览器登录及认领不会自动授权本机 Wrangler。下一次通过命令行发布更新前，先执行上面的 `npm run cf:login` 并在浏览器完成授权，再执行 `npm run deploy`。不要再使用 `--temporary` 创建新的临时部署。
 请勿把 `.wrangler/`、`.dev.vars`、`.env` 或账户令牌提交到仓库。
 
 ## 数据与会话

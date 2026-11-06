@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "dice-night-gamehub",
+  "account_id": "d7ced61ae54d0d05ba3364478d738b2a",
   "main": "services/rooms/worker.ts",
   "compatibility_date": "2026-10-01",
   "workers_dev": true,
