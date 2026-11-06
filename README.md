@@ -4,6 +4,12 @@
 
 项目根目录：`C:\Users\snqu-180\Desktop\GameHub`
 
+## 本地免费联机（cpolar）
+
+已配置本机运行与 cpolar 免费隧道。桌面项目内双击 `启动本地联机.cmd` 即可开服，`查看联机地址.cmd` 显示最新地址，`停止本地联机.cmd` 结束服务。当前浏览器 HTTPS 长连接兼容性仍需排查，先使用输出的 Public HTTP 地址试玩；电脑必须保持开机联网。
+
+详细操作、免费域名变化说明及验证范围见 [本地联机说明](docs/local-hosting.md)。账号密钥只保存在被 Git 忽略的本地目录，不包含在源码备份中。
+
 ## 当前部署
 
 访问地址：https://dice-night-gamehub.dented-sombrero.workers.dev
