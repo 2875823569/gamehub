@@ -1,25 +1,36 @@
 # 玩伴 PLAYROOM
 
-和朋友一起玩的网页游戏平台。首款游戏为 **2～6 人吹牛骰子**，免注册，输入昵称、分享房间链接即可开始。
+和朋友一起玩的网页游戏平台。现有 **12款游戏**，分为“行酒令”和“其他”两类，免注册，输入昵称、分享房间链接即可开始；每个人使用自己的手机或浏览器参与。
+
+## 2026-11-10 游戏分类与默契拆弹
+
+大厅通过“行酒令”和“其他”两个按钮切换游戏，原有11款聚会游戏归入“行酒令”。“其他”新增原创合作解谜游戏**默契拆弹**：支持1～6人，单人可直接开始，多人各持部分线索，180秒内协作解决线路、密码和符号排序，共享三次失误机会。完整玩法见[默契拆弹规则](docs/games/defuse.md)。运行 `npm run test:defuse-integration` 可对本地房间服务验证单人通关、多人线索、重连和重开。
 
 项目根目录：`C:\Users\snqu-180\Desktop\GameHub`
 
+## 2026-11-09 十款新游戏
+
+新增国王杯、我从来没有、真心话大冒险、谁最可能、你宁愿选哪个、搭巴士、数字炸弹、逢七过、分类接龙、别数到31。保留原吹牛骰子及其规则更新。
+
+每款均由独立开发 agent 先整理规则文档再实现。来源、人数、计分、网站改编和超时口径见 [新游戏规则目录](docs/games/README.md)，实际验证与发布状态见 [本次验收记录](docs/games/verification.md)。这是一组常见热门游戏精选，不是有统一统计口径的热度排名。
+
+每个房间固定一种游戏，支持房主开局、私人视图、倒计时、晚加入观战、刷新恢复、退出中止和再次开局。对局主持端保存牌堆与答案；投票收齐前不向其他普通玩家公开选择。P2P 模式下房主掌握完整数据。
+
+## 2026-11-09 规则更新
+
+支持上一局输家先喊、五颗互异的顺子整手计零、围骰／全围、叫 1（比 6 大）、斋／飞、劈／反劈。界面仅有一个「斋」模式按钮。劈会等待叫点者选择接受或反劈后再揭骰，结果显示 ×1／×2／×4 及每手有效贡献。完整口径见 [游戏规则](docs/game-rules.md)。
+
 ## 本地免费联机（cpolar）
 
-已配置本机运行与 cpolar 免费隧道。桌面项目内双击 `启动本地联机.cmd` 即可开服，`查看联机地址.cmd` 显示最新地址，`停止本地联机.cmd` 结束服务。当前浏览器 HTTPS 长连接兼容性仍需排查，先使用输出的 Public HTTP 地址试玩；电脑必须保持开机联网。
+已配置本机运行与 cpolar 免费隧道。桌面项目内双击 `启动本地联机.cmd` 即可开服，`查看联机地址.cmd` 显示最新地址，`停止本地联机.cmd` 结束服务。优先使用输出的 Public HTTPS 地址分享；电脑必须保持开机联网。不同网络的长连接和直连效果需要实际验证。
 
 详细操作、免费域名变化说明及验证范围见 [本地联机说明](docs/local-hosting.md)。账号密钥只保存在被 Git 忽略的本地目录，不包含在源码备份中。
 
-## 当前部署
+## 联机方式
 
-访问地址：https://dice-night-gamehub.dented-sombrero.workers.dev
+默认使用房主主持的 P2P 模式：网页和入房协调通过本机 Node.js + cpolar 提供；游戏操作优先走 WebRTC 直连，失败时自动通过同一服务转发。房主浏览器保留完整对局，其他玩家只接收自己的视图；房主刷新可恢复，退出或断线超时会结束本局并移交房主。
 
-2026-11-06 已完成 Cloudflare 邮箱验证与账户认领。控制台显示 **Your site is live**；Worker 及其资源已由用户账户管理，不再处于待认领状态。网站包含真实 Workers + SQLite Durable Objects 房间服务，访问地址保持不变。
-
-管理入口：https://dash.cloudflare.com/d7ced61ae54d0d05ba3364478d738b2a/workers/services/view/dice-night-gamehub/production
-
-`wrangler.jsonc` 已固定到认领后的账户 ID，防止后续维护时部署到其他账户。账户 ID 是资源标识，不是访问令牌。
-大陆网络的可用性取决于具体地区和运营商。当前未验证移动、联通、电信的独立直连体验。
+房主需要保持页面在前台，本机服务和 cpolar 需要持续运行。直连不保证在所有网络成功。恢复快照异步备份到本机，不阻塞直连操作。详见 [P2P 联机说明](docs/p2p.md)。
 
 ## 目录
 
@@ -28,23 +39,24 @@ GameHub/
   apps/web/                         网页平台
     src/platform/catalog.ts         游戏列表与入口元数据
     src/games/liars-dice/view.ts     吹牛骰子房间与对局界面
-    src/main.ts                     大厅、邀请、会话、WebSocket 连接
+    src/main.ts                     大厅、邀请、会话
+    src/peer-transport.ts           WebRTC 直连、转发兜底及房主恢复
     src/ui.ts                       共享骰子、头像、规则等界面元素
     src/style.css                   桌面与手机样式
-    public/                         图标及安全响应头
+    public/                         网页图标
   packages/
     games/liars-dice/rules.ts        独立的游戏规则和结算
     protocol.ts                     前后端消息和公开状态类型
-  services/rooms/worker.ts           Workers API 与 Durable Object 房间
+  services/rooms/server.ts           独立 Node.js 房间、信令与转发服务
+  packages/host-game.ts              房主和服务端共用的对局引擎
   tests/rules.test.ts                规则测试
   scripts/integration.mjs            真实 WebSocket 对局、重连、60 秒掉线测试
   scripts/capacity.mjs               六人容量、房主离开与房主移交测试
   docs/                             已确认规则与扩展说明
   dist/                             自动生成的网页构建产物
-  wrangler.jsonc                    Cloudflare 部署配置
 ```
 
-以后新游戏的规则放到 `packages/games/<game-id>/`，界面放到 `apps/web/src/games/<game-id>/`，并在平台目录注册入口。新游戏还需添加对应的服务端状态及消息处理；目前房间服务只实现吹牛骰子。
+新游戏的规则放到 `packages/games/<game-id>/rules.ts`，元数据和简明玩法放到 `apps/web/src/games/<game-id>/meta.ts`，详细规则放到 `docs/games/<game-id>.md`。游戏实现 `packages/games/core.ts` 接口后，在服务端 `packages/games/registry.ts` 和前端平台目录注册。新增十款共享 `apps/web/src/games/party/` 的响应式界面；吹牛骰子保留独立界面。
 
 ## 启动
 
@@ -59,7 +71,7 @@ npm run build
 npm run preview
 ```
 
-浏览器打开 http://127.0.0.1:8787 。这是真实本地房间服务，不是页面演示或假数据。
+浏览器打开 http://127.0.0.1:8787 。本地房间服务使用独立 Node.js 运行。
 
 日常开发时，开两个终端：
 
@@ -82,6 +94,9 @@ npm test
 # 先启动 npm run preview
 npm run test:integration
 npm run test:capacity
+npm run test:party-integration
+npm run test:rules-integration
+npm run test:p2p
 ```
 
 集成测试会创建专属测试房间，实际等待 60 秒掉线宽限期，全部完成约需 70 秒。
@@ -95,32 +110,20 @@ npm run test:capacity
 
 测试涵盖：服务端私有骰子、身份校验、非法叫点、非当前玩家操作、房主权限、开骰结算、重玩、刷新重连、后来玩家等待下一局、主动离开、60 秒掉线判负、六人容量、房主移交、空房清理。
 
-## 后续更新部署
+## 更新与数据
 
-```powershell
-npm run cf:login
-npm run cf:whoami
-npm run deploy
-```
+更新代码后，运行“停止本地联机.cmd”，再运行“启动本地联机.cmd”。启动脚本自动构建并启动 Node.js 与 cpolar。项目已移除 Cloudflare 部署配置及依赖。
 
-在浏览器中完成 Cloudflare 登录与 Wrangler 授权即可，不需要将密码或 API Token 发给任何人。
-项目使用 SQLite Durable Objects，适配 Workers 免费方案；请求、计算时长和存储受免费额度约束。没有为项目购买域名或升级付费方案。
-可在 Cloudflare 控制台给 Worker 添加自己的域名，但这不保证大陆网络连通性。
-
-浏览器登录及认领不会自动授权本机 Wrangler。下一次通过命令行发布更新前，先执行上面的 `npm run cf:login` 并在浏览器完成授权，再执行 `npm run deploy`。不要再使用 `--temporary` 创建新的临时部署。
-请勿把 `.wrangler/`、`.dev.vars`、`.env` 或账户令牌提交到仓库。
-
-## 数据与会话
-
-- 每个房间独立由一个 Durable Object 管理，摇骰、叫点、轮次和结算均由服务端决定。
-- 对局中客户端只收到自己的骰子，结算后才公开所有人的骰子。
-- 昵称存放于浏览器 localStorage；随机房间身份凭据存放于当前标签页 sessionStorage。关闭标签页后的恢复能力由浏览器会话恢复行为决定，不等于账号体系。
-- 对局状态和掉线截止时间持久化到 Durable Object 存储；支持 WebSocket 休眠，心跳使用自动回应。
-- 同一个身份最多保留一个活跃连接；旧页面被替换后停止自动重连，避免两个页面互相抢连接。
-- 所有人离开或掉线超时后，房间及其身份数据清理。
-- 房间码是邀请凭据，知道房间码的人可以加入；没有陌生人匹配、账号密码、排行榜或管理员后台。
+- 房间身份及最新恢复快照保存在被 Git 忽略的 `work/rooms/`。不要公开分享该目录。
+- 房主浏览器还将快照保存在当前标签页 sessionStorage；普通玩家不接收完整快照。
+- 同一身份只允许一个活跃页面；刷新保留身份，关闭标签页后的恢复取决于浏览器。
+- 断线保留60秒，主动退出立即中止当前参与的对局；房主离开后移交其他成员。
+- 房主设备负责 P2P 对局的计时；切后台可能延后界面结算，恢复后按绝对截止时间检查操作。
+- 接口保留 `network: "server"` 模式供服务端规则回归测试使用；网页默认创建 `network: "p2p"` 房间。
+- 旧本地运行数据没有自动迁移，新版本需要创建新房间。历史运行数据保留用于恢复，不再读取。
 
 ## 第一版边界
 
-当前提供小游戏平台基础与一款完整的吹牛骰子。没有真人账号恢复、跨设备身份同步、语音聊天、观战大厅或长期历史战绩。
+当前提供小游戏平台与12款完整游戏，包括11款行酒令游戏及1款支持单人的合作解谜游戏。没有真人账号恢复、跨设备身份同步、语音聊天、陌生人观战大厅或长期历史战绩。
 大规模公开推广前，需要按流量增加创建房间限流、滥用防护和监控；本版本已校验房间容量、消息大小、操作频率、昵称、同源请求和服务端操作权限。
+# gamehub
