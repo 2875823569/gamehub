@@ -26,3 +26,17 @@ dialog{width:min(460px,calc(100% - 32px));padding:38px;background:#1b2534;color:
   .phase-playing .live-table{min-height:380px}
   .phase-playing .bid-display{min-height:190px}
 }
+/* Extended dice rules: six faces, a single zhai control, and pending slash response. */
+.face-picker{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.face-picker>button{min-width:0}
+.face-picker .die{--die-size:26px;padding:5px}
+.mode-picker{display:flex;gap:6px;margin:12px 0}
+.mode-picker .button{flex:1;min-width:0;padding:9px 5px;font-size:12px;min-height:36px}
+.mode-picker .selected{border-color:var(--mint);color:var(--mint);background:#b9ef7615}
+.mode-help{min-height:44px;line-height:1.8;margin:10px 0 14px}
+.slash-button{margin-top:10px}
+.hand-summary{font-size:11px;line-height:1.8;color:#b9d5b9;margin:12px 0 0;text-align:center}
+.result-multiplier{color:var(--coral);font-weight:700;margin-top:12px}
+.straight-hand .die,.straight-hand .die.wild{opacity:.35}
+.action-panel>.micro{line-height:1.8;margin-bottom:14px}
+@media(max-width:600px){.face-picker{gap:6px}.face-picker .die{--die-size:34px;padding:7px}.mode-picker .button{min-height:42px}.hand-summary{font-size:10px}}

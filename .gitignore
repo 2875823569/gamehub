@@ -1,5 +1,7 @@
 node_modules/
 dist/
+!examples/single-counter/dist/
+!examples/single-counter/dist/index.html
 .wrangler/
 .dev.vars*
 .env*

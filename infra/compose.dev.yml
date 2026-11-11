@@ -1,0 +1,19 @@
+name: gamehub-platform-dev
+services:
+  postgres:
+    image: postgres:18-alpine@sha256:77f585114c32fbca283dc835b0596f4e52b51b4c6662d7810b2f4084f60a1873
+    environment:
+      POSTGRES_USER: gamehub
+      POSTGRES_PASSWORD: gamehub-local-only
+      POSTGRES_DB: gamehub_dev
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - gamehub-platform-postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gamehub -d gamehub_dev"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+volumes:
+  gamehub-platform-postgres:

@@ -69,6 +69,17 @@ try {
         if (-not (Test-Path -LiteralPath 'work/cpolar/cpolar.exe')) {
             throw 'Missing cpolar client: work/cpolar/cpolar.exe'
         }
+        $managedServer = Get-ManagedProcess $script:state.server
+        if ($managedServer) {
+            $serverCommand = (Get-CimInstance Win32_Process -Filter "ProcessId = $($managedServer.Id)").CommandLine
+            if ($serverCommand -match 'node_modules[\\/]wrangler[\\/]bin[\\/]wrangler\.js') {
+                Write-Host 'Replacing the legacy local runtime with the Node.js server. Create new rooms after this upgrade.'
+                & taskkill.exe /PID $managedServer.Id /T /F | Out-Null
+                if ($LASTEXITCODE -ne 0) { throw 'Could not stop the registered legacy game server.' }
+                $script:state.server = $null
+                Save-State
+            }
+        }
         if (-not (Get-ManagedProcess $script:state.server)) {
             if (Get-NetTCPConnection -LocalPort 8787 -State Listen -ErrorAction SilentlyContinue) {
                 throw 'Port 8787 is already used by an unmanaged process. Stop it before starting GameHub.'
@@ -77,9 +88,7 @@ try {
             if ($LASTEXITCODE -ne 0) { throw 'GameHub build failed.' }
             $nodeExe = (Get-Command node.exe).Source
             $process = Start-Process -FilePath $nodeExe -ArgumentList @(
-                'node_modules/wrangler/bin/wrangler.js', 'dev', '--local',
-                '--ip', '127.0.0.1', '--port', '8787', '--inspector-port', '0',
-                '--log-level', 'warn', '--show-interactive-dev-session=false'
+                '--import', 'tsx', 'services/rooms/server.ts'
             ) -WorkingDirectory $gameRoot -WindowStyle Hidden -PassThru `
                 -RedirectStandardOutput 'work/game-server.out.log' -RedirectStandardError 'work/game-server.err.log'
             $script:state.server = New-Record $process

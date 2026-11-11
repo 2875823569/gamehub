@@ -4,10 +4,11 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "lib": ["ES2022"],
-    "types": ["@cloudflare/workers-types"],
+    "types": ["node"],
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true
   },
-  "include": ["services", "packages"]
+  "include": ["services", "packages"],
+  "exclude": ["packages/game-sdk/browser.ts", "packages/game-sdk/host.ts"]
 }

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { handCount } from "../packages/games/liars-dice/rules.ts";
 
 const base = process.env.GAMEHUB_TEST_URL ?? "http://127.0.0.1:8787";
 const sockets = [];
@@ -69,24 +70,25 @@ try {
   }
   const first = host.state.round.turnId === hostSession.playerId ? host : guest;
   const second = first === host ? guest : host;
-  await action(second, { type: "bid", count: 1, face: 2 });
+  await action(second, { type: "bid", count: 2, face: 2 });
   await until(() => second.errors.some(e => /还没轮到/.test(e)), "out of turn denied");
-  await action(first, { type: "bid", count: 1, face: 2 });
+  await action(first, { type: "bid", count: 2, face: 2 });
   await until(() => second.state.round.bids.length === 1, "bid broadcast");
-  await action(second, { type: "bid", count: 1, face: 2 });
+  await action(second, { type: "bid", count: 2, face: 2 });
   await until(() => second.errors.some(e => /加码/.test(e)), "invalid raise denied");
   await action(second, { type: "challenge" });
   await until(() => host.state.phase === "finished" && guest.state.phase === "finished", "round finishes once challenged");
   const outcome = host.state.round.outcome;
-  const actual = Object.values(host.state.round.revealedDice).flat().filter(v => v === 1 || v === 2).length;
+  const actual = Object.values(host.state.round.revealedDice).reduce((sum, hand) => sum + handCount(hand, outcome.bid), 0);
   assert.equal(outcome.actualCount, actual);
-  assert.equal(outcome.loserId, actual >= 1 ? second.session.playerId : first.session.playerId);
+  assert.equal(outcome.loserId, actual >= 2 ? second.session.playerId : first.session.playerId);
   assert.equal(Object.keys(host.state.round.revealedDice).length, 2);
   console.log("PASS: room creation, invitations, identity, private dice, turn enforcement, challenge and final reveal");
 
   await action(host, { type: "start" });
   await until(() => guest.state.phase === "playing" && guest.state.round.number === 2, "rematch");
   assert.equal(guest.state.round.bids.length, 0);
+  assert.equal(guest.state.round.turnId, outcome.loserId);
   const originalDice = [...guest.state.round.yourDice];
   guest.socket.close();
   await until(() => host.state.players.find(p => p.id === guestSession.playerId)?.connected === false, "disconnect detected");
@@ -111,7 +113,7 @@ try {
   assert.equal(late.state.round.yourDice.length, 5);
   console.log("PASS: late join waits, leaving forfeits immediately, next round includes waiting players");
 
-  // Real Durable Object alarm, not a mocked client timer.
+  // Real server timer, not a mocked client timer.
   late.socket.close();
   await until(() => host.state.players.find(p => p.id === lateSession.playerId)?.connected === false, "offline grace period");
   await pause(1200);

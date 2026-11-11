@@ -1,0 +1,106 @@
+.games-section > .game-grid { grid-template-columns: 1fr; }
+.category-filters { display:flex; gap:10px; margin:24px 0 14px; }
+.category-filter { display:flex; align-items:center; gap:12px; padding:12px 20px; border:1px solid #465342; border-radius:30px; background:#ffffff04; color:#b8c6b2; font:inherit; font-size:14px; cursor:pointer; }
+.category-filter span { font-size:11px; opacity:.75; }
+.category-filter.selected { background:var(--mint); border-color:var(--mint); color:#18271c; font-weight:700; }
+.category-filter:focus-visible { outline:2px solid #fff; outline-offset:4px; }
+.category-description { color:#a6afbf; font-size:13px; line-height:1.9; margin-bottom:22px; }
+.party-game-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:22px; }
+.party-game-card { --card-accent:#c7b8ff; display:flex; flex-direction:column; min-width:0; border:1px solid #374254; border-radius:16px; padding:25px; background:linear-gradient(145deg,#232a3b,#192231); }
+.party-game-card.tone-1 { --card-accent:#ffb692; background:linear-gradient(145deg,#302a30,#192231); }
+.party-game-card.tone-2 { --card-accent:#98dce2; background:linear-gradient(145deg,#213239,#192231); }
+.party-game-card.tone-3 { --card-accent:#c8e78f; background:linear-gradient(145deg,#2b3230,#192231); }
+.party-card-top { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:25px; }
+.party-card-icon { display:grid; place-items:center; width:54px; height:54px; border-radius:16px; border:1px solid #ffffff16; background:#ffffff06; font-size:30px; color:var(--card-accent); }
+.party-card-category { font-size:10px; letter-spacing:1px; color:var(--card-accent); }
+.party-game-card h3 { font-size:23px; letter-spacing:-.5px; }
+.party-game-card > p { color:#a6afbf; font-size:12px; line-height:1.9; margin-top:13px; flex:1; }
+.party-game-card .game-meta { margin:22px 0 20px; }
+.party-game-card .card-actions { justify-content:space-between; gap:10px; }
+.party-game-card .button.primary { background:var(--card-accent); }
+.party-layout { display:grid; grid-template-columns:240px minmax(0,1fr); gap:24px; align-items:start; }
+.party-players { position:sticky; top:18px; }
+.party-roster { display:flex; flex-direction:column; gap:8px; margin:20px 0; }
+.party-player { display:flex; align-items:center; gap:12px; padding:10px; border:1px solid transparent; border-radius:10px; min-width:0; background:#ffffff03; }
+.party-player.current { border-color:#b9ef7677; background:#b9ef7609; }
+.party-player > div { min-width:0; }
+.party-player b { display:block; font-size:12px; overflow-wrap:anywhere; line-height:1.6; }
+.party-player small { display:block; color:#90a0b5; font-size:10px; margin-top:4px; }
+.party-player .avatar { background:#394b42; color:#d4e7c4; flex-shrink:0; }
+.party-player:nth-child(3n + 2) .avatar { background:#48415d; color:#ddd1ff; }
+.party-player:nth-child(3n + 3) .avatar { background:#554139; color:#ffd1b9; }
+.party-players > .button { margin-top:7px; font-size:12px; }
+.party-table { min-height:590px; min-width:0; border:1px solid #44514b; border-radius:20px; background:radial-gradient(ellipse at 50% 0%,#2c3b35aa,transparent 70%),#19242d; padding:36px; }
+.party-stage { display:flex; justify-content:space-between; align-items:center; gap:16px; min-height:27px; margin-bottom:25px; }
+.party-stage .eyebrow { color:#a9beac; letter-spacing:1px; line-height:1.7; }
+.party-timer { flex-shrink:0; padding:6px 10px; border:1px solid #72867644; border-radius:30px; font-size:11px; color:#c5d6bc; font-variant-numeric:tabular-nums; }
+.party-timer.urgent { color:#ffc1a9; border-color:#e8996955; }
+.party-table h2 { font-size:28px; letter-spacing:-.5px; line-height:1.5; overflow-wrap:anywhere; }
+.party-subtitle { color:#9fb1a8; font-size:12px; line-height:1.8; margin-top:10px; }
+.party-prompt { font-size:23px; line-height:1.8; margin:30px 0; padding:24px; background:#ffffff04; border-left:3px solid #b9ef7680; border-radius:0 12px 12px 0; white-space:pre-line; overflow-wrap:anywhere; }
+.party-notice { font-size:12px; line-height:1.9; color:#adc0b5; margin:18px 0; overflow-wrap:anywhere; white-space:pre-line; }
+.party-cards { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin:24px 0; }
+.playing-card { display:grid; place-items:center; text-align:center; min-width:70px; max-width:100%; min-height:92px; padding:15px; background:#f0ebda; color:#263530; border:1px solid #fff5; border-radius:12px; box-shadow:0 4px 0 #9a9c88; font-size:23px; font-weight:700; overflow-wrap:anywhere; white-space:pre-line; }
+.party-choices { display:flex; flex-wrap:wrap; gap:12px; margin:25px 0 12px; }
+.party-choices .button { white-space:normal; min-height:48px; flex:1 1 140px; line-height:1.6; overflow-wrap:anywhere; }
+.party-input { margin:22px 0; }
+.party-input > div { display:flex; gap:10px; align-items:stretch; }
+.party-input input { background:#101e25; min-height:48px; }
+.party-input .button { flex-shrink:0; }
+.party-results { margin:22px 0; border:1px solid #7d9c7530; border-radius:12px; overflow:hidden; }
+.party-result-row { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:13px 17px; border-top:1px solid #ffffff0a; font-size:12px; line-height:1.8; }
+.party-result-row:first-child { border-top:0; }
+.party-result-row > span { color:#b7c7bd; overflow-wrap:anywhere; min-width:0; }
+.party-result-row strong { text-align:right; overflow-wrap:anywhere; min-width:0; max-width:70%; white-space:pre-line; }
+.party-result-row.highlight { background:#b9ef7610; color:var(--mint); }
+.party-result { padding:20px; border:1px solid #b9ef7640; border-radius:12px; background:#b9ef7609; color:#d9eec4; font-size:16px; line-height:1.9; margin:22px 0; white-space:pre-line; overflow-wrap:anywhere; }
+.party-rematch { margin:25px 0; text-align:center; }
+.party-history { margin-top:30px; padding-top:20px; border-top:1px solid #ffffff10; color:#a7b9ae; font-size:12px; line-height:2; overflow-wrap:anywhere; }
+.party-history summary { cursor:pointer; color:#c8d3c4; }
+.party-history ol { padding-left:22px; max-height:250px; overflow:auto; }
+.party-waiting { text-align:center; padding:15px 0 28px; }
+.party-symbol { font-size:65px; margin:12px 0 25px; }
+.party-waiting h2 { margin:18px 0 10px; }
+.party-waiting > p { font-size:13px; line-height:1.8; color:#a8b9ac; }
+.party-chips { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:25px 0; }
+.party-chips span { padding:7px 11px; background:#ffffff06; border-radius:20px; font-size:10px; color:#b8c6b2; }
+.party-waiting > .button { margin:7px; }
+.party-quick-rules { border-top:1px solid #ffffff0e; padding-top:25px; }
+.party-quick-rules h3 { font-size:14px; color:#d2dfcc; }
+.party-quick-rules ol,.party-rules { padding-left:22px; color:#a7b5c2; font-size:12px; line-height:2; }
+.party-quick-rules li,.party-rules li { padding:5px 0 5px 4px; }
+@media(max-width:1000px) {
+  .party-game-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .party-layout { grid-template-columns:190px minmax(0,1fr); gap:16px; }
+  .party-table { padding:25px; }
+}
+@media(max-width:600px) {
+  .party-game-grid { grid-template-columns:1fr; gap:14px; margin-top:16px; }
+  .party-game-card { padding:23px; }
+  .party-card-top { margin-bottom:20px; }
+  .party-game-card h3 { font-size:25px; }
+  .party-game-card > p { font-size:13px; }
+  .party-game-card .card-actions .button { flex:1; }
+  .party-layout { display:flex; flex-direction:column; gap:14px; }
+  .party-players { position:static; width:100%; padding:16px; }
+  .party-roster { flex-direction:row; overflow-x:auto; margin:14px 0; gap:7px; }
+  .party-player { flex-direction:column; min-width:76px; text-align:center; padding:9px 7px; gap:6px; }
+  .party-player b { font-size:10px; max-width:85px; }
+  .party-player small { font-size:8px; }
+  .party-players > .button { padding:9px; min-height:36px; }
+  .party-players > .ghost { display:none; }
+  .party-table { padding:22px 18px; width:100%; min-height:460px; border-radius:16px; }
+  .party-table h2 { font-size:24px; }
+  .party-stage { gap:8px; margin-bottom:18px; }
+  .party-prompt { font-size:20px; line-height:1.8; padding:18px 15px; margin:23px 0; }
+  .party-choices { gap:10px; }
+  .party-choices .button { flex-basis:110px; padding:12px; font-size:13px; }
+  .party-input .button { padding:12px 16px; gap:6px; }
+  .playing-card { min-width:58px; min-height:80px; font-size:20px; padding:12px; }
+  .party-result-row { padding:12px; gap:10px; }
+  .party-result-row strong { max-width:64%; }
+  .party-result { font-size:14px; padding:16px; }
+  .party-waiting > .button { display:flex; width:100%; margin:12px 0; }
+  .party-waiting h2 { font-size:24px; }
+  .party-room .room-heading h1 { font-size:21px; flex-wrap:wrap; }
+}

@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.server.json",
+  "include": ["services/api", "packages/contracts", "scripts/platform-*.ts", "tests/api"]
+}

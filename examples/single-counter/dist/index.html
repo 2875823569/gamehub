@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>点击小挑战</title>
+<style>
+  *{box-sizing:border-box}body{font:18px system-ui,sans-serif;margin:0;background:#f7f5ef;color:#202823;display:grid;min-height:100vh;place-items:center;padding:24px}
+  main{max-width:480px;text-align:center}h1{font-size:28px}output{display:block;font-size:64px;font-weight:700;margin:24px}
+  button{font:inherit;padding:14px 22px;border-radius:12px;border:1px solid #23463c;background:#23463c;color:white;margin:5px;cursor:pointer}
+  button:disabled{opacity:.5}button:focus-visible{outline:3px solid #ac5729;outline-offset:3px}p{line-height:1.6}#status{min-height:3em}
+</style>
+<main>
+  <h1>点击小挑战</h1><p>每一次点击都是新的进度。</p>
+  <output id="count" aria-live="polite">0</output>
+  <button id="click" disabled>再点一次</button><button id="save" disabled>保存进度</button>
+  <p id="status" role="status">正在连接游戏平台…</p>
+</main>
+<script>
+  const allowedParents=/*GAMEHUB_ORIGINS*/["http://127.0.0.1:8788","http://127.0.0.1:5173","http://localhost:5173"];
+  const count=document.getElementById("count"),status=document.getElementById("status");
+  let clicks=0,revision=0,port,nonce,serial=0;
+  const pending=new Map();
+  function request(type,extra={}){return new Promise((resolve,reject)=>{
+    const id=String(++serial),timer=setTimeout(()=>{pending.delete(id);reject(new Error("平台响应超时"));},10000);
+    pending.set(id,{resolve,reject,timer});port.postMessage({protocolVersion:1,nonce,id,type,...extra});
+  });}
+  const timeout=setTimeout(()=>{status.textContent="请从游戏平台的预览或游玩入口打开此样例。";},15000);
+  async function initialize(event){
+    if(event.source!==window.parent || !allowedParents.includes(event.origin) || event.data?.type!=="gamehub:init" ||
+      event.data.protocolVersion!==1 || typeof event.data.nonce!=="string" || event.ports.length!==1)return;
+    window.removeEventListener("message",initialize);clearTimeout(timeout);
+    port=event.ports[0];nonce=event.data.nonce;
+    port.onmessage=event=>{
+      const data=event.data;
+      if(data?.type==="lifecycle"){document.getElementById("click").disabled=true;document.getElementById("save").disabled=true;status.textContent="游戏会话已结束";return;}
+      if(data?.nonce!==nonce || data.type!=="result")return;
+      const item=pending.get(data.id);if(!item)return;pending.delete(data.id);clearTimeout(item.timer);
+      data.error?item.reject(new Error(data.error)):item.resolve(data.result);
+    };
+    port.start();
+    try{
+      await request("ready");
+      const saved=await request("loadProgress");
+      revision=saved?.revision??0;clicks=Number.isSafeInteger(saved?.data?.clicks)?saved.data.clicks:0;
+      count.textContent=String(clicks);status.textContent="点击挑战开始了。";
+      document.getElementById("click").disabled=false;document.getElementById("save").disabled=false;
+    }catch{status.textContent="可以点击体验，进度暂不可读取。";document.getElementById("click").disabled=false;document.getElementById("save").disabled=false;}
+  }
+  window.addEventListener("message",initialize);
+  document.getElementById("click").onclick=()=>{clicks++;count.textContent=String(clicks);};
+  document.getElementById("save").onclick=async()=>{
+    document.getElementById("save").disabled=true;
+    try{const saved=await request("saveProgress",{data:{clicks},expectedRevision:revision});revision=saved.revision;status.textContent="进度已保存。";}
+    catch{status.textContent="保存未成功，请重新打开以读取最新进度。";}
+    finally{document.getElementById("save").disabled=false;}
+  };
+  window.addEventListener("pagehide",()=>{port?.close();for(const item of pending.values())clearTimeout(item.timer);pending.clear();});
+</script>
+</html>

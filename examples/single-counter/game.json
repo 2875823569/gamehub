@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "entry": "dist/index.html",
+  "title": "点击小挑战",
+  "description": "独立上传的原创单人样例，演示受限 SDK、进度读取与保存。",
+  "instructions": "点击按钮累计次数。保存进度后重新进入可继续。",
+  "cover": "",
+  "mode": "single",
+  "minPlayers": 1,
+  "maxPlayers": 1,
+  "devices": ["desktop", "mobile"],
+  "input": ["mouse", "touch"],
+  "sdkVersion": 1,
+  "permissions": ["save"],
+  "editable": false,
+  "assetLicenses": ["GameHub 原创样例，MIT 授权"],
+  "saveSchemaVersion": 1
+}
